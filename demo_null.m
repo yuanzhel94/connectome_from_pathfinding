@@ -1,47 +1,50 @@
 % This is a demo of the model
 addpath(genpath('peripheral_naive')) %peripheral_naive is the model used in the article
 
-rng(3)%for reproducibility
+rng(3);
+fs = 50;
 
 tic;
-pert = 1;% perturbation parameter rho
-beta = 1;% distance decay of attractive force
-sl = 1;% increment step length L_s
 
-n_dim = 2; %2-dimensional circle
-r = 30;%radius of circle
-max_step = 3 .* r ./ sl;%maximum increment steps allowed
-n_nodes = 84;%number of nodes (DK atlas in this case)
-n_axons = 2e5;%number of axons to simulate
-self_attract = true;%allow an axon originated from node i to receive force from node i
-delta_th = pi/12;%maximum angular disparity allowed theta
+pert = 1;
+sl = 1;
 
-return_directed = true;%return the directed median trajectory of axons connecting pairs of nodes
-return_undirected = true;%return the undirected median trajectory of axons connecting pairs of nodes
+n_dim = 2;
+r = 30;
+max_step = 3 .* r ./ sl;
+n_nodes = 84;
+n_axons = 2e5;
+self_attract = true;
+delta_th = pi/12;
 
-node_rad = sample_circle_rad(n_nodes,pert);%evenly sample nodes followed by perturbation
-node_coord = rad2xy(node_rad,r);%convert polar coordinate to cartesian
+return_directed = true;
+return_undirected = true;
 
-axon_rad = sample_circle_rad(n_axons,2); %random sample axons, 2nd argument > 1 for random sampling
-axon_coord = rad2xy(axon_rad,r);%convert polar coordinate to cartesian
+node_rad = sample_circle_rad(n_nodes,pert);
+node_coord = rad2xy(node_rad,r);
 
-%simulate the axons: axons - trajectory of each axon; success - if the axon succeed
-[axons,success] = simulate_network(r,axon_coord,node_coord,beta,sl,max_step,self_attract,"delta_th",delta_th);
+axon_rad = sample_circle_rad(n_axons,2); % random sample axons
+axon_coord = rad2xy(axon_rad,r);
 
-%convert axons to connectivity matrix: 
-%c - directed connectivity matrix;
-%directed_axons: directed median axon trajectory connecting pairs of nodes
-%undirected_axons: undirected median axon trajectory connecting pairs of nodes
+
+
+[axons,success] = simulate_random_walk_network(r,axon_coord,sl,max_step,delta_th);
 [c,directed_axons,undirected_axons] = axons2c(axons,success,node_coord,return_directed,return_undirected);
-
-%makae undirected connectivity matrix
 c_und = c + c' - 2 * diag(diag(c));
+triu_indx = find(triu(ones(size(c_und)),1));
+mask_indx = randsample(triu_indx,round(length(triu_indx)*0.05));
+mask_mat = zeros(size(c_und));
+mask_mat(mask_indx) = 1;
+mask_mat = mask_mat + mask_mat';
+c_mask = c_und .* mask_mat;
 
-% weight-distance associations
-fs = 50;%fontsize for figure
+
 d = squareform(pdist(node_coord));
 indx = find(c_und~=0);
+
+
 figure;scatter(d(indx),log10(c_und(indx)),30,[1,1,1] .* 0.5,'filled');
+
 h = lsline;
 set(h,'linewidth',5,'color','k');
 set(gca,'fontsize',fs,'fontweight','bold');
@@ -52,20 +55,22 @@ xticks([0,60]);
 xlim([0,60]);ylim([0,4]);
 xticks([0,60]);yticks([0,4]);
 
-%show median axon trajectories
 w_max = 1e3;
 show_median_axons_specify_max(c_und,undirected_axons,triu(c_und~=0,1),w_max,n_dim);
-axis square;axis off;title('');
+axis square;axis off;
 title('');
-
-% weight distribution (normalized)
-c_corrected = c_und ./ sum(c_und,2);%normalize by node strength
+show_median_axons_specify_max(c_mask,undirected_axons,triu(c_mask~=0,1),w_max,n_dim);
+axis square;axis off;
+title('');
+show_axons(axons(1:1000,:),'k',1);
+axis square;axis off;title('');
+c_corrected = c_und ./ sum(c_und,2);
 off_diag = find(ones(n_nodes) - diag(diag(ones(n_nodes))));
 hist_vals = log10(c_corrected(off_diag));
 hist_vals = hist_vals(~isinf(hist_vals));
 [vals,bin] = histcounts(hist_vals,15);
 
-fig_inset = figure;histogram(hist_vals,bin,'normalization','pdf','EdgeAlpha',0,'FaceColor','b');
+fig_inset = figure;histogram(hist_vals,bin,'normalization','pdf','EdgeAlpha',0,'FaceColor','r');
 set(gca,'fontsize',fs,'FontWeight','bold');
 fitted = fitdist(hist_vals,'Normal');
 hold;
@@ -74,8 +79,11 @@ plot(bin,y,'k','linewidth',5)
 [h,p,ksstat,cv] = kstest(hist_vals,fitted);
 %     ks_dim = [.25,.2,.2,.1];
 %     annotation('textbox',ks_dim,'String',sprintf('ks stat = %.2f',ksstat),'FitBoxToText','on','FontSize',fs,'FontWeight','bold','EdgeColor','none');
-xlim([-4.5,0]);ylim([0,0.5]);
-xticks([-4,0]);yticks([0,0.5]);
+xlim([-4.5,0]);ylim([0,4]);
+xticks([-4,0]);yticks([0,4]);
+
+toc;
+
 xval = sort(unique(hist_vals),'ascend');
 cdf_norm = cdf(fitted,xval);
 fig_main = figure;hold;
@@ -107,5 +115,5 @@ xticks([-4,0]);yticks([0,1]);
 [hm,hi] = inset(fig_main,fig_inset);
 set(hi,'position',[0.25,0.6,0.25,0.25 ],'fontsize',30)
 
-ks_dim = [.5,.2,.2,.1];
+ks_dim = [.54,.2,.2,.1];
 annotation('textbox',ks_dim,'String',sprintf('ks = %.2f',ksstat),'FitBoxToText','on','FontSize',50,'FontWeight','bold','EdgeColor','none');

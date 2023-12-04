@@ -7,7 +7,7 @@
 
 
 >### Guideline to use the model
->- Function ***peripheral/connectome_from_pathfinding.m*** could be used to generate a connectome with specified force decay parameter ***$\beta$*** and step length parameter ***$L_s$***. 
+>- Function ***peripheral/connectome_from_pathfinding.m*** could be used to generate a connectome with specified force decay parameter $\beta$ and step length parameter $L_s$. 
 >- $\beta$ and $L_s$ are the two mandatory inputs to the function. ***Unless specified, default implementation of the model will be used for other model parameters (e.g., number of nodes, number of axons, etc). These parameters can be specified with "name-value" pairs.*** See function peripheral/connectome_from_pathfinding.m for more details.
 
 >### Subdirectories

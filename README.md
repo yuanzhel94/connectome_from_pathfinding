@@ -17,7 +17,7 @@
 >   -  supporting functions to connectome_from_pathfinding.m
 >   -  functions that generate random walk null model
 >   -  functions that visualize generated axons
->   -  third-party codes for analysis and figure plots, including Brain connectivity toolbox, power-law fit, and annotation.
+>   -  third-party codes for analysis and figure plots, including Brain connectivity toolbox, power-law fit, inset, and annotation.
 >   -  and more features ...
 >- #### demo
 >   This subdir contains a series of demo that replicates major findings in the paper, including:
@@ -27,4 +27,8 @@
 >   -  ***demo_scalefree_null.m*** - replicate the scale-free evaluation for random walk null networks.
 >   -  ***demo_topology.m*** - demonstrate how the normalized complex topological measures (i.e., CC, CPL, SW, Q) were evaluated and optimized.
 
-
+>### Acknowledgement
+> BCT: https://sites.google.com/site/bctnet/
+> powerlaw test: https://aaronclauset.github.io/powerlaws/
+> inset plot: https://au.mathworks.com/matlabcentral/fileexchange/28549-figure-inset?s_tid=FX_rc1_behav
+> annotation: https://au.mathworks.com/matlabcentral/fileexchange/63760-annotate

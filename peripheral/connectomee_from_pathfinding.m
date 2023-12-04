@@ -1,6 +1,22 @@
 function [c_und,node_coord,directed_axons,undirected_axons] = connectomee_from_pathfinding(beta,sl,varargin)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+% One-line code that genreates a connectome from pathfinding model
+%   [c_und,node_coord,directed_axons,undirected_axons] = connectomee_from_pathfinding(beta,sl,name-value-pairs)
+%   Optional name-value pairs include:
+%       'r' - radius of circle, default 30
+%       'N' - number of nodes, default 84
+%       'naxon' - number of axons, default 2e5
+%       'rho' - perturbation parameter, default 1
+%       'theta' - maximum angle change per step, default pi/12
+%       'max_step' - maximum number of growth steps, default 3 * r / sl
+%       'return_directed' - return median axon trajectory for directed network, default true
+%       'return_undirected' - return median axon trajectory for undirected network, default true
+%       'self_attract' - if axons receive attraction from nodes where they origin from, default true
+%       'rng_state' - random number generator state, default seed not specified
+%   Outputs:
+%       c_und - undirected connectivity matrix
+%       node_coord - coordinates of nodes
+%       directed_axons - median axon trajectory for directed network, NaN if return_directed is false
+%       undirected_axons - median axon trajectory for undirected network, NaN if return_undirected is false
 
 pa = inputParser;
 

@@ -1,22 +1,30 @@
 # connectome_from_pathfinding
+- This repository contains code for the study: "A generative model of the connectome with dynamic axon growth". 
+- A novel connectome generative model is proposed to generate macroscopic connectomes from microscopic, chemoaffinity guided axon outgrowth.
 
-## Intro
+>### Abstract
+>Coming soon
 
-## Guideline for use
-### Key functions
-- Peripheral_naive folder contains functions for implementing the model; key functions are listed below. See usage examples in demos.
-- sample_circle_rad: sample node center / axons coordinates on the circle, in radian
-- rad2xy: convert sampled radian to cartesian
-- simulate_network: simulate axons with specified guiding rules
-- simulate_random_walk_network: simulated axons with specified random walk rules
-- axons2c: assign axons to nodes to form connectivity matrix (directed), need to be converted to undirected
 
-### Demos
-- demo.m: generate a model network and test for negative associations between weights and distance, and lognormal weight distribution.
-- demo_null.m: generate a random walk null model and test for negative associations between weights and distance, and lognormal weight distribution.
-- demo_scale_free.m: evaluate the scale free of generated networks.
-- demo_scale_free_null.m: evaluate the scale free of null networks.
-- demo_topology.m: evaluate the topology (CC, CPL, SW, and modularity Q) of a generated network. 
-- Due to high computational cost, we did not provide a demo for parameter optimization; however, guidance for parameter optimization can be found in demo_topology.m
+>### Guideline to use the model
+>- Function ***peripheral/connectome_from_pathfinding.m*** could be used to generate a connectome with specified force decay parameter ***$\beta$*** and step length parameter ***$L_s$***. 
+>- $\beta$ and $L_s$ are the two mandatory inputs to the function. ***Unless specified, default implementation of the model will be used for other model parameters (e.g., number of nodes, number of axons, etc). These parameters can be specified with "name-value" pairs.*** See function peripheral/connectome_from_pathfinding.m for more details.
 
-## Abstract
+>### Subdirectories
+>- #### peripheral
+>   This subdir contains the functions required to replicate major findings in the paper, including:
+>   -  connectome_from_pathfinding.m - one-line code for generating connectoems from specified parameters.
+>   -  supporting functions to connectome_from_pathfinding.m
+>   -  functions that generate random walk null model
+>   -  functions that visualize generated axons
+>   -  third-party codes for analysis and figure plots, including Brain connectivity toolbox, power-law fit, and annotation.
+>   -  and more features ...
+>- #### demo
+>   This subdir contains a series of demo that replicates major findings in the paper, including:
+>   -  ***demo.m*** - replicates axon visualization, weight-distance associations, and weight distributions for the ***model networks***.
+>   -  ***demo_null.m*** - replicate the same sets of properties as in demo.m, but for random walk null model networks.
+>   -  ***demo_scalefree.m*** - replicate the scale-free degree distribution for model networks.
+>   -  ***demo_scalefree_null.m*** - replicate the scale-free evaluation for random walk null networks.
+>   -  ***demo_topology.m*** - demonstrate how the normalized complex topological measures (i.e., CC, CPL, SW, Q) were evaluated and optimized.
+
+

@@ -28,7 +28,7 @@
 >   -  ***demo_topology.m*** - demonstrate how the normalized complex topological measures (i.e., CC, CPL, SW, Q) were evaluated and optimized.
 
 >### Acknowledgement
-> BCT: https://sites.google.com/site/bctnet/
-> powerlaw test: https://aaronclauset.github.io/powerlaws/
-> inset plot: https://au.mathworks.com/matlabcentral/fileexchange/28549-figure-inset?s_tid=FX_rc1_behav
-> annotation: https://au.mathworks.com/matlabcentral/fileexchange/63760-annotate
+> BCT: https://sites.google.com/site/bctnet/  
+> powerlaw test: https://aaronclauset.github.io/powerlaws/  
+> inset plot: https://au.mathworks.com/matlabcentral/fileexchange/28549-figure-inset?s_tid=FX_rc1_behav  
+> annotation: https://au.mathworks.com/matlabcentral/fileexchange/63760-annotate  

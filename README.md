@@ -1,4 +1,5 @@
 # connectome_from_pathfinding
+[![DOI](https://zenodo.org/badge/688776045.svg)](https://zenodo.org/doi/10.5281/zenodo.10258668)
 - This repository contains code for the study: "A generative model of the connectome with dynamic axon growth". 
 - A novel connectome generative model is proposed to generate macroscopic connectomes from microscopic, chemoaffinity guided axon outgrowth.
 

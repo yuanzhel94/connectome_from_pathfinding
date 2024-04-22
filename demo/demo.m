@@ -6,7 +6,7 @@ sl = 1;% increment step length L_s
 
 % generate network with default settings. To change number of brain regions and other settings, 
 % see documentation of function connectomee_from_pathfinding()
-[c_und,node_coord,directed_axons,undirected_axons] = connectomee_from_pathfinding(b,sl,'rng_state',3); % seed for reproduction
+[c_und,node_coord,directed_axons,undirected_axons] = connectome_from_pathfinding(b,sl,'rng_state',3); % seed for reproduction
 n_nodes = size(node_coord,1);
 
 %% evaluate generated network

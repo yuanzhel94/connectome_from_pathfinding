@@ -1,4 +1,4 @@
-function [c_und,node_coord,directed_axons,undirected_axons] = connectomee_from_pathfinding(beta,sl,varargin)
+function [c_und,node_coord,directed_axons,undirected_axons] = connectome_from_pathfinding(beta,sl,varargin)
 % One-line code that genreates a connectome from pathfinding model
 %   [c_und,node_coord,directed_axons,undirected_axons] = connectomee_from_pathfinding(beta,sl,name-value-pairs)
 %   Optional name-value pairs include:
@@ -34,6 +34,8 @@ default_self_attract = true;
 default_return_directed = true; % return median axon trajectory for directed network
 default_return_undirected = true; % return median axon trajectory for undirected network
 default_rng = [];
+default_centroid_correction = false;
+default_remove_diag = true;
 
 % default name-value pair for dependent parameter - i.e., max growth steps
 % initialize as empty and assign value later
@@ -50,6 +52,8 @@ addParameter(pa,'return_undirected',default_return_undirected);
 addParameter(pa,'max_step',default_max_step);
 addParameter(pa,'self_attract',default_self_attract);
 addParameter(pa,'rng_state',default_rng);
+addParameter(pa,'centroid_correction',default_centroid_correction);
+addParameter(pa,'remove_diag',default_remove_diag);
 
 parse(pa,beta,sl,varargin{:});
 
@@ -77,7 +81,11 @@ end
 % generate networks on circle
 node_rad = sample_circle_rad(N,rho);%evenly sample nodes followed by perturbation
 node_coord = rad2xy(node_rad,r);%convert polar coordinate to cartesian
-
+if pa.Results.centroid_correction
+    eval_node_coord = node_coord;
+    node_rad = centroid_correction(node_rad);
+    node_coord = rad2xy(node_rad,r);
+end
 axon_rad = sample_circle_rad(naxon,2); %random sample axons, 2nd argument > 1 for random sampling
 axon_coord = rad2xy(axon_rad,r);%convert polar coordinate to cartesian
 
@@ -88,9 +96,16 @@ axon_coord = rad2xy(axon_rad,r);%convert polar coordinate to cartesian
 %c - directed connectivity matrix;
 %directed_axons: directed median axon trajectory connecting pairs of nodes
 %undirected_axons: undirected median axon trajectory connecting pairs of nodes
-[c,directed_axons,undirected_axons] = axons2c(axons,success,node_coord,return_directed,return_undirected);
-
+if pa.Results.centroid_correction
+    [c,directed_axons,undirected_axons] = axons2c(axons,success,eval_node_coord,return_directed,return_undirected);
+else
+    [c,directed_axons,undirected_axons] = axons2c(axons,success,node_coord,return_directed,return_undirected);
+end
 %makae undirected connectivity matrix
-c_und = c + c' - 2 * diag(diag(c));
+if pa.Results.remove_diag
+    c_und = c + c' - 2 * diag(diag(c));
+else
+    c_und = c + c' - diag(diag(c));
+end
 
 end
